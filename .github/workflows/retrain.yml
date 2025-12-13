@@ -2,7 +2,7 @@ name: MLflow CI Retraining
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -10,24 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Miniconda
-        uses: conda-incubator/setup-miniconda@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          auto-update-conda: true
           python-version: "3.10"
-          activate-environment: mlflow
-          auto-activate-base: false
 
       - name: Install MLflow & DagsHub
-        shell: bash -l {0}
         run: |
           pip install mlflow dagshub
 
-      - name: Run MLflow Project (Conda)
-        shell: bash -l {0}
+      - name: Run MLflow Project (Conda handled by MLflow)
         env:
           DAGSHUB_USER_NAME: ${{ secrets.DAGSHUB_USER_NAME }}
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
@@ -35,7 +30,6 @@ jobs:
           mlflow run MLProject
 
       - name: Build Docker image from MLflow model
-        shell: bash -l {0}
         run: |
           mlflow models build-docker \
             -m runs:/latest/model \
