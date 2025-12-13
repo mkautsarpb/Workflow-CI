@@ -1,4 +1,6 @@
-name: heart-disease-mlflow
+name: heart-disease-retrain
+
+conda_env: conda.yaml
 
 entry_points:
   main:
