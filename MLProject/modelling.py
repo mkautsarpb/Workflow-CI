@@ -23,17 +23,6 @@ DATA_PATH = os.path.join(
     "heart_disease_clean.csv"
 )
 
-# =========================
-# DAGSHUB (MLFLOW ONLINE)
-# =========================
-dagshub.init(
-    repo_owner="mkautsarpb",
-    repo_name="Workflow-CI",   
-    mlflow=True
-)
-mlflow.set_tracking_uri(
-    "https://dagshub.com/mkautsarpb/Workflow-CI.mlflow"
-)
 mlflow.set_experiment("Heart Disease - CI Retraining")
 
 # =========================
