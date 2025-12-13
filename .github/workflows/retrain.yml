@@ -20,7 +20,7 @@ jobs:
 
       - name: Install MLflow & DagsHub
         run: |
-          pip install mlflow dagshub
+          pip install "mlflow<3" dagshub
 
       - name: Run MLflow Project
         env:
