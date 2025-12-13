@@ -28,10 +28,12 @@ DATA_PATH = os.path.join(
 # =========================
 dagshub.init(
     repo_owner="mkautsarpb",
-    repo_name="Workflow-CI",   # ⬅️ HARUS SAMA DENGAN REPO CI
+    repo_name="Workflow-CI",   
     mlflow=True
 )
-
+mlflow.set_tracking_uri(
+    "https://dagshub.com/mkautsarpb/Workflow-CI.mlflow"
+)
 mlflow.set_experiment("Heart Disease - CI Retraining")
 
 # =========================
