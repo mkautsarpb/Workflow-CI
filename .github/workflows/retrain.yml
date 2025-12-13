@@ -1,0 +1,46 @@
+name: MLflow CI Retraining
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install mlflow dagshub
+
+      - name: Run MLflow Project (Retrain Model)
+        env:
+          DAGSHUB_USER_NAME: ${{ secrets.DAGSHUB_USER_NAME }}
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+        run: |
+          mlflow run MLProject
+
+      - name: Build Docker image from MLflow model
+        run: |
+          mlflow models build-docker \
+            -m runs:/latest/model \
+            -n mkautsar/heart-disease-mlflow
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker image
+        run: |
+          docker push mkautsar/heart-disease-mlflow
