@@ -46,11 +46,13 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build Docker Image via MLflow Project
+      env:
+        MLFLOW_DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/heart-disease-mlflow
       run: |
-        mlflow run MLProject -b docker \
-          --name ${{ secrets.DOCKERHUB_USERNAME }}/heart-disease-mlflow
+        mlflow run MLProject -b docker
 
     - name: Push Docker Image
       run: |
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/heart-disease-mlflow
+
 
