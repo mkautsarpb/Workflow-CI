@@ -17,7 +17,7 @@ DATA_PATH = os.path.join(
 )
 
 # =========================
-# DAGSHUB INIT (ONLINE MLFLOW)
+# DAGSHUB INIT (MLFLOW ONLINE)
 # =========================
 dagshub.init(
     repo_owner="mkautsarpb",
@@ -27,9 +27,6 @@ dagshub.init(
 
 mlflow.set_experiment("Heart Disease - CI Retraining")
 
-# =========================
-# LOAD DATA
-# =========================
 df = pd.read_csv(DATA_PATH)
 X = df.drop(columns=["target"])
 y = df["target"]
@@ -38,9 +35,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# =========================
-# TRAIN + TUNING
-# =========================
 param_grid = {
     "C": [0.01, 0.1, 1, 10],
     "solver": ["liblinear"]
@@ -59,21 +53,14 @@ with mlflow.start_run():
 
     y_pred = best_model.predict(X_test)
 
-    acc = accuracy_score(y_test, y_pred)
-    prec = precision_score(y_test, y_pred)
-    rec = recall_score(y_test, y_pred)
-
     mlflow.log_params(grid.best_params_)
-    mlflow.log_metric("accuracy", acc)
-    mlflow.log_metric("precision", prec)
-    mlflow.log_metric("recall", rec)
+    mlflow.log_metric("accuracy", accuracy_score(y_test, y_pred))
+    mlflow.log_metric("precision", precision_score(y_test, y_pred))
+    mlflow.log_metric("recall", recall_score(y_test, y_pred))
 
-    # MODEL ARTEFAK
-    model_path = os.path.join(BASE_DIR, "model.joblib")
-    joblib.dump(best_model, model_path)
-    mlflow.log_artifact(model_path)
+    joblib.dump(best_model, "model.joblib")
+    mlflow.log_artifact("model.joblib")
 
-    # CONFUSION MATRIX ARTEFAK
     cm = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(5,4))
     sns.heatmap(cm, annot=True, fmt="d")
