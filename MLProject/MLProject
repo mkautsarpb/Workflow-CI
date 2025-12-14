@@ -1,7 +1,12 @@
-name: heart-disease-retrain
+name: heart-disease-training
 
 conda_env: conda.yaml
 
 entry_points:
   main:
-    command: "python modelling.py"
+    parameters:
+      data_path:
+        type: str
+        default: heart_disease_preprocessing/heart_disease_clean.csv
+    command: >
+      python modelling.py --data_path {data_path}

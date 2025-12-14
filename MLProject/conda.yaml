@@ -1,13 +1,12 @@
-name: heart-disease-env
+name: mlflow-env
 channels:
-  - defaults
+  - conda-forge
 dependencies:
   - python=3.10
   - pip
   - pip:
-      - pandas
+      - mlflow
       - scikit-learn
-      - mlflow<3
-      - dagshub
+      - pandas
+      - numpy
       - joblib
-
