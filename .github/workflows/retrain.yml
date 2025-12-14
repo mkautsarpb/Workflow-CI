@@ -27,6 +27,10 @@ jobs:
           MLFLOW_TRACKING_URI: https://dagshub.com/mkautsarpb/Workflow-CI.mlflow
           MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USER_NAME }}
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
+      - name: Debug MLflow Env
+        run: |
+          echo "URI=$MLFLOW_TRACKING_URI"
+          echo "USER=$MLFLOW_TRACKING_USERNAME"
 
         run: |
           mlflow run MLProject
