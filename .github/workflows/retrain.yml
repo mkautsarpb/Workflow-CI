@@ -23,8 +23,12 @@ jobs:
         pip install mlflow
 
     - name: Run MLflow Project (Retrain)
+      env:
+        MLFLOW_TRACKING_URI: sqlite:///mlflow.db
+        MLFLOW_EXPERIMENT_NAME: ci-retraining
       run: |
         mlflow run MLProject --env-manager=local
+
 
 
     - name: Upload Model Artifact
