@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import mlflow
-import dagshub
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix
@@ -16,18 +15,10 @@ DATA_PATH = os.path.join(
     "heart_disease_clean.csv"
 )
 
-# =========================
-# DAGSHUB INIT (MLFLOW ONLINE)
-# =========================
-dagshub.init(
-    repo_owner="mkautsarpb",
-    repo_name="Workflow-CI",
-    mlflow=True
-)
-
 mlflow.set_experiment("Heart Disease - CI Retraining")
 
 df = pd.read_csv(DATA_PATH)
+
 X = df.drop(columns=["target"])
 y = df["target"]
 
@@ -58,12 +49,12 @@ with mlflow.start_run():
     mlflow.log_metric("precision", precision_score(y_test, y_pred))
     mlflow.log_metric("recall", recall_score(y_test, y_pred))
 
-    joblib.dump(best_model, "model.joblib")
-    mlflow.log_artifact("model.joblib")
+    model_path = "model.joblib"
+    joblib.dump(best_model, model_path)
+    mlflow.log_artifact(model_path)
 
     cm = confusion_matrix(y_test, y_pred)
-    plt.figure(figsize=(5,4))
-    sns.heatmap(cm, annot=True, fmt="d")
+    plt.figure(figsize=(5, 4))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
     plt.savefig("confusion_matrix.png")
-    plt.close()
     mlflow.log_artifact("confusion_matrix.png")
