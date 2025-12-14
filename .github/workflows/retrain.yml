@@ -26,8 +26,10 @@ jobs:
       env:
         MLFLOW_TRACKING_URI: sqlite:///mlflow.db
         MLFLOW_EXPERIMENT_NAME: ci-retraining
+        MLFLOW_RUN_ID: ""   # 🔥 INI KUNCI UTAMA
       run: |
         mlflow run MLProject --env-manager=local
+
 
 
 
